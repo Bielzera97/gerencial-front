@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "./components/Navbar";
-import FixedBar from "./components/FixedBar";
-
-
+import { AuthProvider } from "./context/Context";
+import AppShell from "./components/AppShell";
 
 export const metadata: Metadata = {
   title: "Gerencial - Sistema de Gestão",
@@ -18,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <FixedBar/>
-        {children}
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );
