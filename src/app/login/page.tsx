@@ -22,8 +22,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50">
       <div className="w-full max-w-sm bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-blue-600 mb-16 text-center">
-          Logo
+        <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
+          Login
         </h2>
         <form
           onSubmit={handleSubmit}

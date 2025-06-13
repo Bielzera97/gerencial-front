@@ -128,19 +128,19 @@ const FinancialPage = () => {
         />
         <div className="flex gap-2 items-center">
           <button
-            className={`px-4 py-2 rounded ${typeFilter === "TODOS" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} transition`}
+            className={`cursor-pointer px-4 py-2 rounded ${typeFilter === "TODOS" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} transition`}
             onClick={() => setTypeFilter("TODOS")}
           >
             Todos
           </button>
           <button
-            className={`px-4 py-2 rounded ${typeFilter === "ENTRADA" ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"} transition`}
+            className={`cursor-pointer px-4 py-2 rounded ${typeFilter === "ENTRADA" ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"} transition`}
             onClick={() => setTypeFilter("ENTRADA")}
           >
             Entradas
           </button>
           <button
-            className={`px-4 py-2 rounded ${typeFilter === "SAIDA" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"} transition`}
+            className={`cursor-pointer px-4 py-2 rounded ${typeFilter === "SAIDA" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"} transition`}
             onClick={() => setTypeFilter("SAIDA")}
           >
             Saídas

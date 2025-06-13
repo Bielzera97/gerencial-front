@@ -1,13 +1,14 @@
 "use client";
 
 import { LogOut, Users, CreditCard, Download, DollarSign, BarChart } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
 import { useAuth } from "@/app/context/Context";
 
 const FixedBar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { logout } = useAuth();
 
   const links = [
@@ -17,6 +18,14 @@ const FixedBar = () => {
     { href: "/financial", label: "Financeiro", icon: DollarSign },
     { href: "/balance", label: "Balanço Geral", icon: BarChart },
   ];
+
+  // Corrige o logout para limpar o cookie e redirecionar para login
+  const handleLogout = () => {
+    // Remove o cookie auth
+    document.cookie = "auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    if (logout) logout();
+    router.push("/login");
+  };
 
   return (
     <aside className="hidden md:flex h-screen w-64 bg-white flex-col p-4 fixed z-30 shadow-md overflow-y-auto">
@@ -49,7 +58,7 @@ const FixedBar = () => {
         })}
         {/* Botão de logout como item do menu */}
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className={clsx(
             "flex items-center gap-3 p-2 rounded-md transition-all group w-full text-left mt-2",
             "hover:bg-blue-100 active:scale-[0.98] text-gray-700"

@@ -263,13 +263,13 @@ const PayAccountsPage = () => {
                   <td className="py-2 px-4">
                     <button
                       onClick={() => handleEdit(acc)}
-                      className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition mr-2"
+                      className="bg-yellow-500 cursor-pointer text-white px-3 py-1 rounded hover:bg-yellow-600 transition mr-2"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => handleDelete(acc.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                      className="bg-red-500 cursor-pointer text-white px-3 py-1 rounded hover:bg-red-600 transition"
                     >
                       Excluir
                     </button>
@@ -294,7 +294,7 @@ const PayAccountsPage = () => {
           <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={handleCloseModal}
-              className="absolute top-2 right-2 text-gray-400 hover:text-blue-600 text-xl"
+              className="absolute cursor-pointer top-2 right-2 text-gray-400 hover:text-blue-600 text-xl"
               aria-label="Fechar"
             >
               ×
@@ -365,7 +365,7 @@ const PayAccountsPage = () => {
               <button
                 type="submit"
                 disabled={posting}
-                className="bg-blue-500 text-white font-semibold rounded px-4 py-2 hover:bg-blue-600 transition disabled:opacity-60"
+                className="bg-blue-500 cursor-pointer text-white font-semibold rounded px-4 py-2 hover:bg-blue-600 transition disabled:opacity-60"
               >
                 {posting ? "Salvando..." : "Salvar"}
               </button>
