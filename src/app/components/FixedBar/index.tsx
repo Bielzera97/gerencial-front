@@ -1,18 +1,14 @@
 "use client";
 
-import {
-  Users,
-  CreditCard,
-  Download,
-  DollarSign,
-  BarChart,
-} from "lucide-react";
-import Link from "next/link";
+import { LogOut, Users, CreditCard, Download, DollarSign, BarChart } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import clsx from "clsx";
+import { useAuth } from "@/app/context/Context";
 
 const FixedBar = () => {
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   const links = [
     { href: "/clients", label: "Clientes", icon: Users },
@@ -23,14 +19,13 @@ const FixedBar = () => {
   ];
 
   return (
-    <aside className="hidden md:flex h-screen w-64 bg-white flex-col p-4 fixed z-30 shadow-md">
+    <aside className="hidden md:flex h-screen w-64 bg-white flex-col p-4 fixed z-30 shadow-md overflow-y-auto">
       <div className="flex items-center justify-center my-6 pb-5">
         <h2 className="text-lg font-bold text-blue-500">Logo</h2>
       </div>
       <nav className="flex-1 space-y-1">
         {links.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
-
           return (
             <Link
               key={href}
@@ -52,6 +47,20 @@ const FixedBar = () => {
             </Link>
           );
         })}
+        {/* Botão de logout como item do menu */}
+        <button
+          onClick={logout}
+          className={clsx(
+            "flex items-center gap-3 p-2 rounded-md transition-all group w-full text-left mt-2",
+            "hover:bg-blue-100 active:scale-[0.98] text-gray-700"
+          )}
+        >
+          <LogOut
+            size={20}
+            className="text-blue-500 group-hover:text-blue-700 transition-colors"
+          />
+          <span>Sair</span>
+        </button>
       </nav>
     </aside>
   );

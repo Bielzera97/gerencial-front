@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Users, X , Download, DollarSign, BarChart} from "lucide-react";
+import { CreditCard, Users, X, Download, DollarSign, BarChart, LogOut } from "lucide-react";
+import { useAuth } from "@/app/context/Context";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { logout } = useAuth();
 
   // Fecha o menu ao clicar fora
   useEffect(() => {
@@ -41,6 +43,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  // Logout e fecha o menu
+  const handleLogout = () => {
+    logout();
+    onClose();
+  };
+
   return (
     <>
       {/* Fundo escuro clicável */}
@@ -62,7 +70,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
         <ul className="p-4 space-y-4">
-
           <li
             onClick={() => handleNavigate("/clients")}
             className="hover:text-gray-300 cursor-pointer flex items-center gap-2 hover:bg-blue-100 transition-colors rounded p-2 active:bg-blue-200" 
@@ -97,6 +104,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           >
             <BarChart size={20} className="text-blue-500 active:text-blue-700" />
             <p className="active:text-blue-700 transition-colors">Balanço Geral</p>
+          </li>
+          {/* Botão de logout */}
+          <li
+            onClick={handleLogout}
+            className="cursor-pointer flex items-center gap-2 hover:bg-blue-100 transition-colors rounded p-2 active:bg-blue-200"
+          >
+            <LogOut size={20} className="text-blue-500 active:text-blue-700" />
+            <p className="active:text-blue-700 transition-colors">Sair</p>
           </li>
         </ul>
       </div>
