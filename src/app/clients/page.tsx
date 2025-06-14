@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 type Client = {
   id: string;
   nome: string;
-  email: string;
-  telefone: string;
+  email: string | null;
+  telefone: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 const ClientsPage = () => {
@@ -16,6 +18,7 @@ const ClientsPage = () => {
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("");
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:3001/clients")
@@ -65,6 +68,15 @@ const ClientsPage = () => {
     } finally {
       setPosting(false);
     }
+  };
+
+  // Modal de detalhes do cliente
+  const handleClientClick = (client: Client) => {
+    setSelectedClient(client);
+  };
+
+  const handleCloseClientModal = () => {
+    setSelectedClient(null);
   };
 
   // Filtra os clientes pelo nome digitado
@@ -128,10 +140,14 @@ const ClientsPage = () => {
             </thead>
             <tbody>
               {filteredClients.map((client) => (
-                <tr key={client.id} className="border-t hover:bg-blue-50">
+                <tr
+                  key={client.id}
+                  className="border-t hover:bg-blue-50 cursor-pointer"
+                  onClick={() => handleClientClick(client)}
+                >
                   <td className="py-2 px-4">{client.nome}</td>
-                  <td className="py-2 px-4">{client.email}</td>
-                  <td className="py-2 px-4">{client.telefone}</td>
+                  <td className="py-2 px-4">{client.email ?? "-"}</td>
+                  <td className="py-2 px-4">{client.telefone ?? "-"}</td>
                 </tr>
               ))}
               {filteredClients.length === 0 && (
@@ -146,7 +162,7 @@ const ClientsPage = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal de novo cliente */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
@@ -195,6 +211,50 @@ const ClientsPage = () => {
                 {posting ? "Salvando..." : "Salvar"}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de detalhes do cliente */}
+      {selectedClient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
+            <button
+              onClick={handleCloseClientModal}
+              className="absolute top-2 right-2 text-gray-400 hover:text-blue-600 text-xl"
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+            <h2 className="text-xl font-bold text-blue-600 mb-6 text-center">
+              Detalhes do Cliente
+            </h2>
+            <div className="flex flex-col gap-2">
+              <div>
+                <span className="font-semibold text-blue-700">ID:</span>{" "}
+                {selectedClient.id}
+              </div>
+              <div>
+                <span className="font-semibold text-blue-700">Nome:</span>{" "}
+                {selectedClient.nome}
+              </div>
+              <div>
+                <span className="font-semibold text-blue-700">Email:</span>{" "}
+                {selectedClient.email ?? "-"}
+              </div>
+              <div>
+                <span className="font-semibold text-blue-700">Telefone:</span>{" "}
+                {selectedClient.telefone ?? "-"}
+              </div>
+              <div>
+                <span className="font-semibold text-blue-700">Criado em:</span>{" "}
+                {new Date(selectedClient.createdAt).toLocaleString("pt-BR")}
+              </div>
+              <div>
+                <span className="font-semibold text-blue-700">Atualizado em:</span>{" "}
+                {new Date(selectedClient.updatedAt).toLocaleString("pt-BR")}
+              </div>
+            </div>
           </div>
         </div>
       )}

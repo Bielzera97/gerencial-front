@@ -60,7 +60,7 @@ const FixedBar = () => {
         <button
           onClick={handleLogout}
           className={clsx(
-            "flex items-center gap-3 p-2 rounded-md transition-all group w-full text-left mt-2",
+            "flex cursor-pointer items-center gap-3 p-2 rounded-md transition-all group w-full text-left mt-2",
             "hover:bg-blue-100 active:scale-[0.98] text-gray-700"
           )}
         >
