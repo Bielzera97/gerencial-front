@@ -1,11 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "../context/Context";
 
 export default function LoginPage() {
-  const { login } = useAuth();
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,12 +10,24 @@ export default function LoginPage() {
   const [forgotMsg, setForgotMsg] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(username, password)) {
-      router.push("/clients");
-    } else {
-      setError("Usuário ou senha inválidos");
+    setError("");
+    try {
+      const res = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: username, password }),
+        credentials: "include", // ESSENCIAL para salvar o cookie!
+      });
+      if (!res.ok) {
+        setError("Usuário ou senha inválidos");
+        return;
+      }
+      // O backend já seta o cookie, recarregue a página:
+      window.location.href = "/";
+    } catch {
+      setError("Erro ao conectar com o servidor");
     }
   };
 
