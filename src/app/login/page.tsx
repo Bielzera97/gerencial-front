@@ -16,16 +16,13 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("https://SEU_BACKEND/auth/login", {
+      const res = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: username, password }),
         credentials: "include",
       });
       if (!res.ok) {
-        // Para debug, veja a resposta do backend:
-        const msg = await res.text();
-        console.log("Erro do backend:", msg);
         if (res.status === 401) {
           setError("Usuário ou senha inválidos.");
         } else {
@@ -35,7 +32,7 @@ export default function LoginPage() {
         return;
       }
       window.location.href = "/";
-    } catch  {
+    } catch {
       setError("Erro de conexão com o servidor. Tente novamente.");
       setLoading(false);
     }
