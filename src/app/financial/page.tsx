@@ -44,6 +44,8 @@ const statusColors: Record<string, string> = {
   RECEBIDO: "bg-green-100 text-green-700",
 };
 
+const statusOptions = ["TODOS", "PENDENTE", "ATRASADO", "PAGO", "RECEBIDO"];
+
 function formatDate(dateStr: string | null) {
   if (!dateStr) return "Pendente";
   const date = new Date(dateStr);
@@ -55,6 +57,7 @@ const FinancialPage = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState<"TODOS" | "ENTRADA" | "SAIDA">("TODOS");
+  const [statusFilter, setStatusFilter] = useState<string>("TODOS");
 
   useEffect(() => {
     Promise.all([
@@ -97,11 +100,12 @@ const FinancialPage = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  // Filtro por nome e tipo
+  // Filtro por nome, tipo e status
   const filteredOperations = operations.filter((op) => {
     const matchesName = op.clienteNome.toLowerCase().includes(filter.toLowerCase());
     const matchesType = typeFilter === "TODOS" ? true : op.tipo === typeFilter;
-    return matchesName && matchesType;
+    const matchesStatus = statusFilter === "TODOS" ? true : op.status === statusFilter;
+    return matchesName && matchesType && matchesStatus;
   });
 
   // Totais filtrados
@@ -146,6 +150,30 @@ const FinancialPage = () => {
             Saídas
           </button>
         </div>
+        <select
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
+          className="border border-blue-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white text-blue-700 font-semibold shadow transition-all hover:border-blue-500"
+          style={{ minWidth: 170 }}
+        >
+          {statusOptions.map(status => (
+            <option
+              key={status}
+              value={status}
+              className={
+                status === "PENDENTE"
+                  ? "text-yellow-700"
+                  : status === "ATRASADO"
+                  ? "text-red-700"
+                  : status === "PAGO" || status === "RECEBIDO"
+                  ? "text-green-700"
+                  : "text-gray-700"
+              }
+            >
+              {status === "TODOS" ? "Todos os Status" : status}
+            </option>
+          ))}
+        </select>
       </div>
       {loading ? (
         <div className="flex items-center gap-2 text-blue-500 py-8 justify-center">

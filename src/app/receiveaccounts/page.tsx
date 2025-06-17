@@ -30,6 +30,8 @@ function formatDate(dateStr: string | null) {
   return date.toLocaleDateString("pt-BR");
 }
 
+const statusOptions = ["PENDENTE", "ATRASADO", "RECEBIDO"];
+
 const ReceiveAccountsPage = () => {
   const [accounts, setAccounts] = useState<ReceiveAccount[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
@@ -179,6 +181,24 @@ const ReceiveAccountsPage = () => {
     }
   };
 
+  // Função para editar o status da conta
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const res = await fetch(`http://localhost:3001/cash-receive/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error("Erro ao atualizar status");
+      const updated = await res.json();
+      setAccounts((prev) =>
+        prev.map((acc) => (acc.id === id ? { ...acc, status: updated.status } : acc))
+      );
+    } catch {
+      alert("Erro ao atualizar status");
+    }
+  };
+
   // Filtra as contas pelo nome do cliente
   const filteredAccounts = accounts.filter((acc) => {
     const clientName = getClientName(acc.clienteId).toLowerCase();
@@ -249,13 +269,19 @@ const ReceiveAccountsPage = () => {
                     })}
                   </td>
                   <td className="py-2 px-4">
-                    <span
+                    <select
+                      value={acc.status}
+                      onChange={(e) => handleStatusChange(acc.id, e.target.value)}
                       className={`px-2 py-1 rounded text-xs font-semibold ${
                         statusColors[acc.status] || "bg-gray-100 text-gray-700"
                       }`}
                     >
-                      {acc.status}
-                    </span>
+                      {statusOptions.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td className="py-2 px-4">{formatDate(acc.data_emissao)}</td>
                   <td className="py-2 px-4">{formatDate(acc.data_recebimento)}</td>
