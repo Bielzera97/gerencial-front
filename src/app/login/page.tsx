@@ -9,25 +9,35 @@ export default function LoginPage() {
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotMsg, setForgotMsg] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/auth/login", {
+      const res = await fetch("https://SEU_BACKEND/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: username, password }),
-        credentials: "include", // ESSENCIAL para salvar o cookie!
+        credentials: "include",
       });
       if (!res.ok) {
-        setError("Usuário ou senha inválidos");
+        // Para debug, veja a resposta do backend:
+        const msg = await res.text();
+        console.log("Erro do backend:", msg);
+        if (res.status === 401) {
+          setError("Usuário ou senha inválidos.");
+        } else {
+          setError("Erro inesperado ao tentar fazer login.");
+        }
+        setLoading(false);
         return;
       }
-      // O backend já seta o cookie, recarregue a página:
       window.location.href = "/";
-    } catch {
-      setError("Erro ao conectar com o servidor");
+    } catch  {
+      setError("Erro de conexão com o servidor. Tente novamente.");
+      setLoading(false);
     }
   };
 
@@ -75,12 +85,18 @@ export default function LoginPage() {
             />
             <button
               type="submit"
-              className="bg-blue-500 cursor-pointer text-white font-semibold rounded px-4 py-2 hover:bg-blue-600 transition"
+              disabled={loading}
+              className="bg-blue-500 cursor-pointer text-white font-semibold rounded px-4 py-2 hover:bg-blue-600 transition disabled:opacity-60"
             >
-              Entrar
+              {loading ? "Entrando..." : "Entrar"}
             </button>
             {error && (
-              <div className="text-red-600 text-center">{error}</div>
+              <div className="flex items-center gap-2 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded text-sm animate-fade-in">
+                <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" strokeWidth="2" d="M12 9v2m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/>
+                </svg>
+                <span>{error}</span>
+              </div>
             )}
             <button
               type="button"
@@ -111,7 +127,12 @@ export default function LoginPage() {
               {forgotLoading ? "Enviando..." : "Enviar"}
             </button>
             {forgotMsg && (
-              <div className="text-green-600 text-center">{forgotMsg}</div>
+              <div className="flex items-center gap-2 bg-green-100 border border-green-300 text-green-700 px-3 py-2 rounded text-sm animate-fade-in">
+                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>{forgotMsg}</span>
+              </div>
             )}
             <button
               type="button"
